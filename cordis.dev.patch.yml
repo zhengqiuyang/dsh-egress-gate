@@ -1,0 +1,4 @@
+# Dev overlay: pnpm dsh web --patch C:/Users/Admin/.zcode/workspace/default/dsh-egress-gate/cordis.dev.patch.yml
+- insert:
+    - id: dsh-egress-gate
+      name: 'C:/Users/Admin/.zcode/workspace/default/dsh-egress-gate/src/index.ts'
