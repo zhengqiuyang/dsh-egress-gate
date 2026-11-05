@@ -78,6 +78,6 @@ here.
 
 ## Known limitations
 
-- **Web tools are enforced; shell is observe-only by default** (set `shellMode: 'enforce'` to change).
+- **Web tools are enforced; shell is observe-only by default** (set `shellMode: 'enforce'` to change). A fetch verb gates every URL in its own command segment; segments without one (a plain echo) are not treated as sends.
 - **No redirect resolution**: the check sees the requested host, not where a redirect lands.
 - **This is not an OS-level network control.** Scripts, sockets, proxies, and MCP tools with their own network access are outside this gate — use a sandbox or proxy for hard boundaries.
