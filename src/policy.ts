@@ -14,9 +14,9 @@ export type UrlVerdict =
   | { url: string; host: string; action: 'deny'; matchedBy: string };
 
 const URL_RE = /https?:\/\/[^\s<>"'`)\]}]+/gi;
-/** Fetch/call verbs inside shell commands whose following URLs we gate. */
-const SHELL_FETCH_RE =
-  /\b(?:curl|wget|Invoke-WebRequest|Invoke-RestMethod|fetch|http)\b[^\n;|&]*?(https?:\/\/[^\s<>"'`)\]}]+)/gi;
+/** A fetch verb vouches for its own command segment only. */
+const SHELL_FETCH_VERB_RE =
+  /\b(?:curl|wget|Invoke-WebRequest|Invoke-RestMethod|fetch|http)\b/i;
 
 function hostOf(rawUrl: string): string | null {
   try {
@@ -76,14 +76,19 @@ export function urlsFromWebArgs(args: unknown): string[] {
 }
 
 /**
- * URLs a shell command would fetch. Honest about precision: this extracts
- * URLs that follow fetch verbs on the same command segment — it cannot see
- * through scripts, variables, or proxies.
+ * URLs a shell command would fetch. Honest about precision: a fetch verb
+ * vouches only for its own command segment (split at ; | & and newlines),
+ * and every URL in that segment is gated — `curl a b` gates both, while
+ * `echo https://a; curl https://b` gates only b. It cannot see through
+ * scripts, variables, or proxies.
  */
 export function urlsFromShellCommand(command: string): string[] {
   const urls: string[] = [];
-  for (const m of command.matchAll(SHELL_FETCH_RE)) urls.push(m[1] ?? '');
-  return urls.filter((u) => u.length > 0);
+  for (const segment of command.split(/[;|&\n]/)) {
+    if (!SHELL_FETCH_VERB_RE.test(segment)) continue;
+    for (const m of segment.matchAll(URL_RE)) urls.push(m[0]);
+  }
+  return urls;
 }
 
 export function summarizeVerdicts(verdicts: readonly UrlVerdict[]): string {

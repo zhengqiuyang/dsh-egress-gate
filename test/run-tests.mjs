@@ -72,6 +72,18 @@ await test('shell fetch verbs extracted, unrelated urls not', () => {
   assert.equal(urls[0], 'https://api.example.com/ping');
 });
 
+await test('T09: every URL in a fetch segment is gated', () => {
+  const urls = urlsFromShellCommand('curl https://github.com https://untrusted.example');
+  assert.deepEqual(urls, ['https://github.com', 'https://untrusted.example']);
+});
+
+await test('T09: a verb vouches only for its own segment', () => {
+  const urls = urlsFromShellCommand('echo see https://a.example; curl https://b.example');
+  assert.deepEqual(urls, ['https://b.example']);
+  const none = urlsFromShellCommand('echo https://plain.example');
+  assert.equal(none.length, 0);
+});
+
 await test('powershell invoke-webrequest extracted', () => {
   const urls = urlsFromShellCommand('Invoke-WebRequest -Uri https://collector.example.com/x -Method POST');
   assert.equal(urls.length, 1);
