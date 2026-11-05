@@ -75,3 +75,10 @@ npm install && npm test
 If dsh ships first-party destination policy, or proxy-layer plugins add
 per-host rules, this freezes at its last working version with a postmortem
 here.
+
+## Known limitations
+
+- **Web tools are enforced; shell is observe-only by default** (set `shellMode: 'enforce'` to change).
+- **Multi-URL commands**: only the first URL after a fetch verb is extracted today.
+- **No redirect resolution**: the check sees the requested host, not where a redirect lands.
+- **This is not an OS-level network control.** Scripts, sockets, proxies, and MCP tools with their own network access are outside this gate — use a sandbox or proxy for hard boundaries.
