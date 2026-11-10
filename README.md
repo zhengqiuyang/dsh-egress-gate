@@ -1,5 +1,11 @@
 # dsh-egress-gate
 
+[![CI](https://github.com/zhengqiuyang/dsh-egress-gate/actions/workflows/ci.yml/badge.svg)](https://github.com/zhengqiuyang/dsh-egress-gate/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/dsh-egress-gate)](https://www.npmjs.com/package/dsh-egress-gate)
+[![license](https://img.shields.io/npm/l/dsh-egress-gate)](https://github.com/zhengqiuyang/dsh-egress-gate/blob/main/LICENSE)
+
+> Part of the [DSH trust layer](https://github.com/zhengqiuyang/dsh-trust-panel/blob/main/SUITE.md) — ten deterministic checks, no LLM in the trust path.
+
 > **If this helps you, please give it a star** — it helps others find it. Thanks!
 
 Deterministic network egress gate for
